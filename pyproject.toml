@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "jedi"
+version = "0.1.0"
+description = ""
+authors = ["Ge Ya (Olga) Luo <olga.xu823@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+vjepa = {git = "git@github.com:oooolga/v-jepa.git"}
+scikit-learn = "^1.5.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://oooolga.github.io/ctrl-v.github.io/">
+<a href="https://oooolga.github.io/JEDi.github.io/">
     <picture>
         <img alt="logo" src="./assets/logo.png" height="80">
     </picture>

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "VideoJEDi"
-version = "0.0.1"
+version = "0.1.0"
 description = ""
 authors = ["Ge Ya (Olga) Luo <olga.xu823@gmail.com>"]
 readme = "README.md"
@@ -15,7 +15,7 @@ pytest = "8.2.0"
 pyyaml = "6.0.2"
 torch = "2.4.1"
 torchvision = "0.19.1"
-vjepa = "0.1.0"
+vjepa = "0.1.1"
 
 
 [build-system]

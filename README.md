@@ -1,7 +1,7 @@
 <p align="center">
 <a href="https://oooolga.github.io/JEDi.github.io/">
     <picture>
-        <img alt="logo" src="./assets/logo.png" height="80">
+        <img alt="logo" src="https://oooolga.github.io/JEDi.github.io/static/images/logo-sparkles.png" height="80">
     </picture>
 </a>
 </p>
@@ -15,6 +15,6 @@
 <img src="https://views.whatilearened.today/views/github/oooolga/JEDi.svg" />
 <p align="center">
 <picture>
-  <img src="./assets/teaser_plot.png">
+  <img src="https://oooolga.github.io/JEDi.github.io/static/images/teaser_plot.png">
 </picture>
 </p>

@@ -6,7 +6,7 @@ import pytest
 import os
 
 def test_compute_metric():
-    from jedi import JEDiMetric
+    from videojedi import JEDiMetric
     import numpy as np
     jedi = JEDiMetric()
     jedi.train_features = np.random.rand(5000, 512)
@@ -15,7 +15,7 @@ def test_compute_metric():
     print(f"JEDi Metric: {jedi.compute_metric()}")
 
 def test_load_train_and_test_features():
-    from jedi import JEDiMetric
+    from videojedi import JEDiMetric
     import torch
     import numpy as np
     def custom_collate(batch):

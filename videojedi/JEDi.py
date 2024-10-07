@@ -23,8 +23,10 @@ class JEDiMetric:
         else:
             if not hasattr(self, 'vjepa'):
                 self.vjepa = VJEPA(model_dir=self.model_dir)
+            
             print("Computing features for training set")
             assert train_loader is not None, "train_loader is not provided"
+            # Compute features for training set; train_loader batch shape = (B, T, C, H, W); range = [0, 1]
             self.train_features = feature_aggregator(self.vjepa, train_loader, num_samples=num_samples,
                     filename=f'{self.feature_path}/train.npy' if self.feature_path is not None else None)
         
@@ -33,8 +35,10 @@ class JEDiMetric:
         else:
             if not hasattr(self, 'vjepa'):
                 self.vjepa = VJEPA(model_dir=self.model_dir)
+            
             print("Computing features for testing set")
             assert test_loader is not None, "test_loader is not provided"
+            # Compute features for testing set; test_loader batch shape = (B, T, C, H, W); range = [0, 1]
             self.test_features = feature_aggregator(self.vjepa, test_loader, num_samples=num_samples,
                     filename=f'{self.feature_path}/test.npy' if self.feature_path is not None else None)
         

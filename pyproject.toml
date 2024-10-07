@@ -1,14 +1,21 @@
 [tool.poetry]
-name = "jedi"
-version = "0.1.0"
+name = "VideoJEDi"
+version = "0.0.1"
 description = ""
 authors = ["Ge Ya (Olga) Luo <olga.xu823@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-vjepa = {git = "git@github.com:oooolga/v-jepa.git"}
-scikit-learn = "^1.5.2"
+scikit-learn = "1.3.2"
+av = "12.1.0"
+numpy = ">=1.24.0"
+pyav = "12.0.5"
+pytest = "8.2.0"
+pyyaml = "6.0.2"
+torch = "2.4.1"
+torchvision = "0.19.1"
+vjepa = "0.1.0"
 
 
 [build-system]

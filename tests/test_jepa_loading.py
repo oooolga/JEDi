@@ -6,20 +6,20 @@ import pytest
 import os
 
 def test_load_and_unload_vjepa():
-    from jedi import VJEPA
+    from videojedi import VJEPA
     _vjepa = VJEPA(model_dir='/network/scratch/x/xuolga/Results/')
 
     print(_vjepa.model_dir)
     assert os.path.exists(f"{_vjepa.model_dir}/vith16.pth.tar"), f"{_vjepa.model_dir}/vith16.pth.tar does not exist"
     assert os.path.exists(f"{_vjepa.model_dir}/ssv2-probe.pth.tar"), f"{_vjepa.model_dir}/ssv2-probe.pth.tar does not exist"
 
-    from jedi import model_cleanup
+    from videojedi import model_cleanup
     model_cleanup(_vjepa)
     assert os.environ.get("_vjepa") is None
 
 
 def test_vjepa_inference_240x320():
-    from jedi import VJEPA
+    from videojedi import VJEPA
     _vjepa = VJEPA(model_dir='/network/scratch/x/xuolga/Results/')
 
     # Get UCF101 loader
@@ -65,11 +65,11 @@ def test_vjepa_inference_240x320():
     feats = _vjepa.get_feats(data)
     assert feats.shape == (10, 1280)
     
-    from jedi import model_cleanup
+    from videojedi import model_cleanup
     model_cleanup(_vjepa)
 
 def test_vjepa_inference_224x224():
-    from jedi import VJEPA
+    from videojedi import VJEPA
     _vjepa = VJEPA(model_dir='/network/scratch/x/xuolga/Results/')
 
     # Get UCF101 loader
@@ -115,11 +115,11 @@ def test_vjepa_inference_224x224():
     feats = _vjepa.get_feats(data)
     assert feats.shape == (10, 1280)
     
-    from jedi import model_cleanup
+    from videojedi import model_cleanup
     model_cleanup(_vjepa)
 
 def test_vjepa_feature_aggregator():
-    from jedi import VJEPA
+    from videojedi import VJEPA
     _vjepa = VJEPA(model_dir='/network/scratch/x/xuolga/Results/')
 
     # Get UCF101 loader
@@ -159,10 +159,10 @@ def test_vjepa_feature_aggregator():
                                  frames_per_clip=32, train=True, batch_size=10, image_size=(240, 320))
     
     # Get 50 samples of features
-    from jedi import feature_aggregator
+    from videojedi import feature_aggregator
     feats = feature_aggregator(_vjepa, data_loader, num_samples=50, filename='train.npy')
     assert feats.shape == (50, 1280), 'Expected 50 samples of 1280 features'
     assert os.path.exists('train.npy'), 'train.npy does not exist'
 
-    from jedi import model_cleanup
+    from videojedi import model_cleanup
     model_cleanup(_vjepa)

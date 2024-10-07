@@ -20,6 +20,7 @@ def feature_aggregator(model, data_loader, num_samples, filename=None):
     import numpy as np
     all_features = None
     for i, (data, target) in enumerate(data_loader):
+        # data shape = (B, T, C, H, W); data range = [0, 1]
         data = data.cuda()
         feats = model.get_feats(data)
         all_features = feats if all_features is None else np.concatenate([all_features, feats], axis=0)

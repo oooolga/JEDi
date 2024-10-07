@@ -1,7 +1,7 @@
 <p align="center">
 <a href="https://oooolga.github.io/ctrl-v.github.io/">
     <picture>
-        <img alt="logo" src="./assets/logo-sparkles.png" height="80">
+        <img alt="logo" src="./assets/logo.png" height="80">
     </picture>
 </a>
 </p>

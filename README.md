@@ -15,11 +15,19 @@
     <img src="https://img.shields.io/badge/Webpage-JEDi-darkviolet" /></a>
 <img src="https://img.shields.io/github/license/oooolga/JEDi" />
 <a href="https://pypi.org/project/VideoJEDi/" alt="webpage">
-    <img src="https://img.shields.io/pypi/v/VideoJEDi
-    " /></a>
+    <img src="https://img.shields.io/pypi/v/VideoJEDi" /></a>
 <img src="https://views.whatilearened.today/views/github/oooolga/JEDi.svg" />
 <p align="center">
 <picture>
   <img src="https://oooolga.github.io/JEDi.github.io/static/images/teaser_plot.png">
 </picture>
 </p>
+
+## Installation
+Install our package from PyPI
+```bash
+pip install --upgrade videojedi
+```
+
+## Tutorial
+Get started with our library using this interactive demo notebook: [Tutorial](https://github.com/oooolga/JEDi/blob/main/tutorials/JEDi_tutorial.ipynb).

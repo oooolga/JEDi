@@ -1,9 +1,14 @@
 [tool.poetry]
 name = "VideoJEDi"
-version = "0.1.0"
-description = ""
-authors = ["Ge Ya (Olga) Luo <olga.xu823@gmail.com>"]
+version = "0.1.2"
+license="Apache-2.0"
+description = "JEPA Embedding Distance - for video distribution quality assessment."
+authors = ["Ge Ya (Olga) Luo <olga.xu@umontreal.ca>"]
 readme = "README.md"
+homepage = "https://oooolga.github.io/JEDi.github.io/"
+include = [
+    { path = "configs", format = ["sdist", "wheel"]}
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -15,7 +20,7 @@ pytest = "8.2.0"
 pyyaml = "6.0.2"
 torch = "2.4.1"
 torchvision = "0.19.1"
-vjepa = "0.1.1"
+vjepa = "0.1.2"
 
 
 [build-system]

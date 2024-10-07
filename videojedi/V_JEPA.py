@@ -157,7 +157,7 @@ def load_checkpoint(
 
     return classifier
 
-def get_default_vjepa(yaml_fname='configs/vith16_ssv2_16x2x3.yaml',
+def get_default_vjepa(yaml_url='https://raw.githubusercontent.com/oooolga/JEDi/refs/heads/main/configs/vith16_ssv2_16x2x3.yaml',
                       model_dir=None,
                       finetuned=True):
     
@@ -165,8 +165,14 @@ def get_default_vjepa(yaml_fname='configs/vith16_ssv2_16x2x3.yaml',
 
     # Load config
     args_eval = None
-    with open(yaml_fname, 'r') as y_file:
-        args_eval = yaml.load(y_file, Loader=yaml.FullLoader)
+    # with open(yaml_fname, 'r') as y_file:
+    #     args_eval = yaml.load(y_file, Loader=yaml.FullLoader)
+    if True:
+        import requests
+        response = requests.get(yaml_url, allow_redirects=True)
+        content = response.content.decode("utf-8")
+        args_eval = yaml.safe_load(content)
+
         logger.info('loaded params...')
         # ----------------------------------------------------------------------- #
         #  PASSED IN PARAMS FROM CONFIG FILE

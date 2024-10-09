@@ -34,7 +34,29 @@ pip install --upgrade videojedi
 ```
 
 ## Tutorial
-Get started with our library using this interactive demo notebook: [Tutorial](https://github.com/oooolga/JEDi/blob/main/tutorials/JEDi_tutorial.ipynb).
+Our metric has a simple setup process. To compute V-JEPA features and the JEDi metric, follow these simple steps:
+- Pixel values are in the range [0, 1]
+- Input dimension order is T, 3, H, W (frames, channels, height, width)
+
+```python
+from videojedi import JEDiMetric
+jedi = JEDiMetric(feature_path=..., model_dir=...)
+jedi.load_features(loaderA, loaderB, num_samples=...)
+print(f"JEDi Metric: {jedi.compute_metric()}")
+```
+
+If V-JEPA features are already precomputed, simply load them and compute the JEDi metric.
+
+```python
+from videojedi import JEDiMetric
+import numpy as np
+jedi = JEDiMetric()
+jedi.train_features = np.random.rand(5000, 1280)
+jedi.test_features = np.random.rand(5000, 1280)
+print(f"JEDi Metric: {jedi.compute_metric()}") 
+```
+
+Follow our interactive tutorial notebook for a detailed walkthrough: [Tutorial](https://github.com/oooolga/JEDi/blob/main/tutorials/JEDi_tutorial.ipynb).
 
 ## Citation
 

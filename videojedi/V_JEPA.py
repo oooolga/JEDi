@@ -27,9 +27,11 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 class VJEPA:
-    def __init__(self, model_dir=None,
-                       normalize=((0.485, 0.456, 0.406),(0.229, 0.224, 0.225)),
-                       finetuned=True):
+    def __init__(self,
+        model_dir=None,
+        yaml_fname=None,
+        normalize=((0.485, 0.456, 0.406),(0.229, 0.224, 0.225)),            
+        finetuned=True):
 
         model_dir = model_dir if model_dir is not None else os.getcwd()
         self.model_dir = model_dir
@@ -41,7 +43,7 @@ class VJEPA:
             print('Downloading ssv2-probe.pth.tar')
             download_vjepa(save_path=model_dir, finetuned_probe=True)
         
-        self.encoder, self.classifier = get_default_vjepa(model_dir=model_dir, finetuned=finetuned)
+        self.encoder, self.classifier = get_default_vjepa(yaml_fname=yaml_fname, model_dir=model_dir, finetuned=finetuned)
         import vjepa.datasets.utils.video.transforms as video_transforms
         self.transforms = video_transforms.Normalize(mean=normalize[0], std=normalize[1])
         self.finetuned = finetuned
@@ -157,70 +159,75 @@ def load_checkpoint(
 
     return classifier
 
-def get_default_vjepa(yaml_url='https://raw.githubusercontent.com/oooolga/JEDi/refs/heads/main/configs/vith16_ssv2_16x2x3.yaml',
-                      model_dir=None,
-                      finetuned=True):
+def get_default_vjepa(
+    yaml_fname=None,
+    model_dir=None,
+    finetuned=True,
+):
     
     model_dir = model_dir if model_dir is not None else os.getcwd()
 
     # Load config
     args_eval = None
-    # with open(yaml_fname, 'r') as y_file:
-    #     args_eval = yaml.load(y_file, Loader=yaml.FullLoader)
-    if True:
+    if yaml_fname:
+        with open(yaml_fname, 'r') as y_file:
+            args_eval = yaml.load(y_file, Loader=yaml.FullLoader)
+    else:
         import requests
+        yaml_url='https://raw.githubusercontent.com/oooolga/JEDi/refs/heads/main/configs/vith16_ssv2_16x2x3.yaml'
         response = requests.get(yaml_url, allow_redirects=True)
         content = response.content.decode("utf-8")
         args_eval = yaml.safe_load(content)
+    assert args_eval is not None
 
-        logger.info('loaded params...')
-        # ----------------------------------------------------------------------- #
-        #  PASSED IN PARAMS FROM CONFIG FILE
-        # ----------------------------------------------------------------------- #
+    logger.info('loaded params...')
+    # ----------------------------------------------------------------------- #
+    #  PASSED IN PARAMS FROM CONFIG FILE
+    # ----------------------------------------------------------------------- #
 
-        # -- PRETRAIN
-        args_pretrain = args_eval.get('pretrain')
-        checkpoint_key = args_pretrain.get('checkpoint_key', 'target_encoder')
-        model_name = args_pretrain.get('model_name', None)
-        patch_size = args_pretrain.get('patch_size', None)
-        pretrain_folder = args_pretrain.get('folder', None)
-        ckp_fname = args_pretrain.get('checkpoint', None)
-        tag = args_pretrain.get('write_tag', None)
-        use_sdpa = args_pretrain.get('use_sdpa', True)
-        use_SiLU = args_pretrain.get('use_silu', False)
-        tight_SiLU = args_pretrain.get('tight_silu', True)
-        uniform_power = args_pretrain.get('uniform_power', False)
-        pretrained_path = os.path.join(pretrain_folder, ckp_fname)
-        # Optional [for Video model]:
-        tubelet_size = args_pretrain.get('tubelet_size', 2)
-        pretrain_frames_per_clip = args_pretrain.get('frames_per_clip', 1)
+    # -- PRETRAIN
+    args_pretrain = args_eval.get('pretrain')
+    checkpoint_key = args_pretrain.get('checkpoint_key', 'target_encoder')
+    model_name = args_pretrain.get('model_name', None)
+    patch_size = args_pretrain.get('patch_size', None)
+    pretrain_folder = args_pretrain.get('folder', None)
+    ckp_fname = args_pretrain.get('checkpoint', None)
+    tag = args_pretrain.get('write_tag', None)
+    use_sdpa = args_pretrain.get('use_sdpa', True)
+    use_SiLU = args_pretrain.get('use_silu', False)
+    tight_SiLU = args_pretrain.get('tight_silu', True)
+    uniform_power = args_pretrain.get('uniform_power', False)
+    pretrained_path = os.path.join(pretrain_folder, ckp_fname)
+    # Optional [for Video model]:
+    tubelet_size = args_pretrain.get('tubelet_size', 2)
+    pretrain_frames_per_clip = args_pretrain.get('frames_per_clip', 1)
 
-        # -- DATA
-        args_data = args_eval.get('data')
-        train_data_path = [args_data.get('dataset_train')]
-        val_data_path = [args_data.get('dataset_val')]
-        dataset_type = args_data.get('dataset_type', 'VideoDataset')
-        num_classes = args_data.get('num_classes')
-        eval_num_segments = args_data.get('num_segments', 1)
-        eval_frames_per_clip = args_data.get('frames_per_clip', 16)
-        eval_frame_step = args_pretrain.get('frame_step', 4)
-        eval_duration = args_pretrain.get('clip_duration', None)
-        eval_num_views_per_segment = args_data.get('num_views_per_segment', 1)
+    # -- DATA
+    args_data = args_eval.get('data')
+    train_data_path = [args_data.get('dataset_train')]
+    val_data_path = [args_data.get('dataset_val')]
+    dataset_type = args_data.get('dataset_type', 'VideoDataset')
+    num_classes = args_data.get('num_classes')
+    eval_num_segments = args_data.get('num_segments', 1)
+    eval_frames_per_clip = args_data.get('frames_per_clip', 16)
+    eval_frame_step = args_pretrain.get('frame_step', 4)
+    eval_duration = args_pretrain.get('clip_duration', None)
+    eval_num_views_per_segment = args_data.get('num_views_per_segment', 1)
 
-        # -- OPTIMIZATION
-        args_opt = args_eval.get('optimization')
-        resolution = args_opt.get('resolution', 224)
-        batch_size = args_opt.get('batch_size')
-        attend_across_segments = args_opt.get('attend_across_segments', False)
-        num_epochs = args_opt.get('num_epochs')
-        wd = args_opt.get('weight_decay')
-        start_lr = args_opt.get('start_lr')
-        lr = args_opt.get('lr')
-        final_lr = args_opt.get('final_lr')
-        warmup = args_opt.get('warmup')
-        use_bfloat16 = args_opt.get('use_bfloat16')
+    # -- OPTIMIZATION
+    args_opt = args_eval.get('optimization')
+    resolution = args_opt.get('resolution', 224)
+    batch_size = args_opt.get('batch_size')
+    attend_across_segments = args_opt.get('attend_across_segments', False)
+    num_epochs = args_opt.get('num_epochs')
+    wd = args_opt.get('weight_decay')
+    start_lr = args_opt.get('start_lr')
+    lr = args_opt.get('lr')
+    final_lr = args_opt.get('final_lr')
+    warmup = args_opt.get('warmup')
+    use_bfloat16 = args_opt.get('use_bfloat16')
 
-        eval_tag = args_eval.get('tag', None)
+    eval_tag = args_eval.get('tag', None)
     
     if not torch.cuda.is_available():
         device = torch.device('cpu')

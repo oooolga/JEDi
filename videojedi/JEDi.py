@@ -4,12 +4,13 @@ import os
 import numpy as np
 
 class JEDiMetric:
-    def __init__(self, feature_path=None, model_dir=None):
+    def __init__(self, feature_path=None, model_dir=None, config_path=None):
         self.feature_path = feature_path
-        if feature_path is not None:
+        if not feature_path:
             import warnings
             warnings.warn("feature_path is not provided, will not save computed features.")
         self.model_dir = model_dir if model_dir is not None else os.getcwd()
+        self.config_path = config_path
     
     def compute_metric(self):
         assert hasattr(self, 'train_features'), "train_features is not loaded"
@@ -22,27 +23,30 @@ class JEDiMetric:
             self.train_features = np.load(f'{self.feature_path}/train.npy')
         else:
             if not hasattr(self, 'vjepa'):
-                self.vjepa = VJEPA(model_dir=self.model_dir)
+                self.vjepa = VJEPA(model_dir=self.model_dir, config_fn=self.config_path)
             
             print("Computing features for training set")
             assert train_loader is not None, "train_loader is not provided"
             # Compute features for training set; train_loader batch shape = (B, T, C, H, W); range = [0, 1]
-            self.train_features = feature_aggregator(self.vjepa, train_loader, num_samples=num_samples,
-                    filename=f'{self.feature_path}/train.npy' if self.feature_path is not None else None)
+            self.train_features = feature_aggregator(
+                self.vjepa, train_loader, num_samples=num_samples,
+                filename=f'{self.feature_path}/train.npy' if self.feature_path is not None else None
+            )
         
         if os.path.exists(f'{self.feature_path}/test.npy'):
             self.test_features = np.load(f'{self.feature_path}/test.npy')
         else:
             if not hasattr(self, 'vjepa'):
-                self.vjepa = VJEPA(model_dir=self.model_dir)
+                self.vjepa = VJEPA(model_dir=self.model_dir, config_fn=self.config_path)
             
             print("Computing features for testing set")
             assert test_loader is not None, "test_loader is not provided"
             # Compute features for testing set; test_loader batch shape = (B, T, C, H, W); range = [0, 1]
-            self.test_features = feature_aggregator(self.vjepa, test_loader, num_samples=num_samples,
-                    filename=f'{self.feature_path}/test.npy' if self.feature_path is not None else None)
+            self.test_features = feature_aggregator(
+                self.vjepa, test_loader, num_samples=num_samples,
+                filename=f'{self.feature_path}/test.npy' if self.feature_path is not None else None
+            )
         
         if hasattr(self, 'vjepa'):
             model_cleanup(self.vjepa)
         return self.train_features, self.test_features
-        

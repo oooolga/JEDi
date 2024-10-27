@@ -23,7 +23,7 @@ class JEDiMetric:
             self.train_features = np.load(f'{self.feature_path}/train.npy')
         else:
             if not hasattr(self, 'vjepa'):
-                self.vjepa = VJEPA(model_dir=self.model_dir, config_fn=self.config_path)
+                self.vjepa = VJEPA(model_dir=self.model_dir, config_fname=self.config_path)
             
             print("Computing features for training set")
             assert train_loader is not None, "train_loader is not provided"
@@ -37,7 +37,7 @@ class JEDiMetric:
             self.test_features = np.load(f'{self.feature_path}/test.npy')
         else:
             if not hasattr(self, 'vjepa'):
-                self.vjepa = VJEPA(model_dir=self.model_dir, config_fn=self.config_path)
+                self.vjepa = VJEPA(model_dir=self.model_dir, config_fname=self.config_path)
             
             print("Computing features for testing set")
             assert test_loader is not None, "test_loader is not provided"

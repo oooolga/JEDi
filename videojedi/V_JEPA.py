@@ -29,7 +29,7 @@ logger.setLevel(logging.INFO)
 class VJEPA:
     def __init__(self,
         model_dir=None,
-        yaml_fname=None,
+        config_fname=None,
         normalize=((0.485, 0.456, 0.406),(0.229, 0.224, 0.225)),            
         finetuned=True):
 
@@ -43,7 +43,7 @@ class VJEPA:
             print('Downloading ssv2-probe.pth.tar')
             download_vjepa(save_path=model_dir, finetuned_probe=True)
         
-        self.encoder, self.classifier = get_default_vjepa(yaml_fname=yaml_fname, model_dir=model_dir, finetuned=finetuned)
+        self.encoder, self.classifier = get_default_vjepa(config_fname=config_fname, model_dir=model_dir, finetuned=finetuned)
         import vjepa.datasets.utils.video.transforms as video_transforms
         self.transforms = video_transforms.Normalize(mean=normalize[0], std=normalize[1])
         self.finetuned = finetuned
@@ -160,7 +160,7 @@ def load_checkpoint(
     return classifier
 
 def get_default_vjepa(
-    yaml_fname=None,
+    config_fname=None,
     model_dir=None,
     finetuned=True,
 ):
@@ -169,8 +169,8 @@ def get_default_vjepa(
 
     # Load config
     args_eval = None
-    if yaml_fname:
-        with open(yaml_fname, 'r') as y_file:
+    if config_fname:
+        with open(config_fname, 'r') as y_file:
             args_eval = yaml.load(y_file, Loader=yaml.FullLoader)
     else:
         import requests

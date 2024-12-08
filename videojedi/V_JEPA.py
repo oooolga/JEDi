@@ -8,6 +8,7 @@
 
 import math
 from functools import partial
+import socket
 import yaml, os
 
 import torch
@@ -25,6 +26,13 @@ import logging
 logging.basicConfig()
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
+
+def find_free_port() -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('', 0))
+        return s.getsockname()[1]
+
 
 class VJEPA:
     def __init__(self,
@@ -238,7 +246,7 @@ def get_default_vjepa(
     world_size, rank = init_distributed()
     def setup(rank, world_size):
         os.environ['MASTER_ADDR'] = 'localhost'
-        os.environ['MASTER_PORT'] = '12355'
+        os.environ['MASTER_PORT'] = str(find_free_port())
 
         # initialize the process group
         dist.init_process_group("gloo", rank=rank, world_size=world_size)

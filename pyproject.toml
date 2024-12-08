@@ -12,16 +12,17 @@ include = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-scikit-learn = "1.5.0"
-av = "12.1.0"
+scikit-learn = ">=1.5.0"
+av = ">=12.1.0"
 numpy = ">=1.24.0"
-pyav = "12.0.5"
-pytest = "8.2.0"
-pyyaml = "6.0.2"
-torch = "2.4.1"
-torchvision = "0.19.1"
-vjepa = "0.1.2"
+pyav = ">=12.0.5"
+pyyaml = ">=6.0.2"
+torch = ">=2.2.1"
+torchvision = ">=0.17.2"
+vjepa = ">=0.1.2"
 
+[tool.poetry.extras]
+test = ["pytest"]
 
 [build-system]
 requires = ["poetry-core"]
